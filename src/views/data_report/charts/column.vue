@@ -7,17 +7,26 @@
 
 <script>
   import echarts from 'echarts';
-  import {DEFAULT_ECHARTS_OPTIONS} from '../constants';
+
   import fmtAxias from '../utils/fmtAxias';
+  import fmtSeries from '../utils/fmtSeries';
+
+  import {DEFAULT_ECHARTS_OPTIONS} from '../constants';
 
   export default {
 
     mounted() {
-      this.drawChart();
+      if (this.chartData) {
+        this.drawChart();
+      }
     },
 
-    components: {
-
+    props: {
+      // 父级传入data
+      chartData: {
+        type: Object,
+        default: null
+      }
     },
 
     data(){
@@ -27,24 +36,17 @@
     },
 
     methods: {
+      // 绘制图表
       drawChart() {
         const chartDom = this.$refs.chart;
-        console.log(chartDom);
         const chartObj = echarts.init(chartDom);
-        console.log(chartObj);
         chartObj.setOption(this.getChartOpts());
       },
 
+      // 获取图标配置
       getChartOpts() {
-        const chart_data = {
-          legend: ['名称（计数）'],
-          xAxis: ['北京', '武汉'],
-          series: [{
-            data: [22, 101],
-            name: '名称（计数）',
-            type: 'bar'
-          }]
-        };
+
+        const chart_data = this._convertData(this.chartData);
 
         return {
           color: DEFAULT_ECHARTS_OPTIONS.color,
@@ -83,7 +85,70 @@
               formatter: value => fmtAxias(value)
             }
           }],
-          series: chart_data.series
+          series: chart_data.series,
+          dataZoom: [{
+            type: 'inside',
+            start: 0,
+            end: 10
+          }]
+        }
+      },
+
+      // 转化数据
+      _convertData(data) {
+
+        let legend = []
+        let series = []
+        let xAxis = []
+        // 转成数据
+        let dims = Object.entries(data.dims) 
+
+        // dims nums data 的数组长度是一样的。
+        // dims 
+        // 用第一列的数据进行排序
+        let serialize = []
+
+        data.nums && Object.keys(data.nums) && Object.keys(data.nums).forEach((item,i) => {
+          legend.push(item)
+
+          let _series = {
+            name: '直接访问',
+            type: 'bar',
+            data: [320, 332, 301, 334, 390, 330, 320]
+          };
+          _series.name = item
+          _series.data = data.nums[item].map(value => fmtSeries(value))
+          
+          data.nums[item].forEach((d, i) => {
+            let _xaxis = []
+            dims.forEach(item => {
+              _xaxis.push(item[1][i])
+            })
+            xAxis.push(_xaxis.join('-'))
+          })
+
+          // 如果 serialize 存在/
+          if (serialize.length > 0) {
+            // 清空原数据
+            let data = []
+            xAxis = []
+            serialize.forEach(index => {
+              let _xaxis = []
+              data.push(_series.data[index])
+              dims.forEach(item => {
+                _xaxis.push(item[1][index])
+              })
+              xAxis.push(_xaxis.join('-'))
+            })
+            _series.data = data
+          }
+          series.push(_series)
+        })
+
+        return {
+          legend,
+          xAxis,
+          series
         }
       }
     }
@@ -94,9 +159,13 @@
   .container{
     height: 100%;
     width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
     .chart-conatiner {
       height: 100%;
       width: 100%;
+      padding: 20px 0;
+      box-sizing: border-box;
     }
   }
 </style>

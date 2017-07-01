@@ -29,14 +29,19 @@
 
 
 <script>
-  import {getChartData} from '../../apis';
-
+  import wx from 'weixin-js-sdk';
+  
   let recordTimer = 0;
 
   export default {
 
     mounted() {
-
+      this.$router.push({
+        name: 'dataReport',
+        params: {
+          voice: '语音输入的文字'
+        }
+      });
     },
 
     data(){
@@ -115,12 +120,13 @@
                     text: '识别结果：' + res.translateResult
                   });
 
-                  getChartData({
-                    lang_texts: [res.translateResult]
-                  }, json => {
-                    this.pending = false;
-                  }, err => {
-                    this.pending = false;
+                  this.pending = false;
+
+                  this.$router.push({
+                    name: 'dataReport',
+                    params: {
+                      voice: res.translateResult
+                    }
                   });
                   
                 } else {

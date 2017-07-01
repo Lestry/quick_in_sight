@@ -7,16 +7,16 @@ import DataReport from '@/views/data_report';
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
   routes: [
     {
       path: '/',
-      name: 'Home',
+      name: 'home',
       component: Home
     },
     {
-      path: '/data_report',
-      name: 'DataReport',
+      path: '/data_report/:voice',
+      name: 'dataReport',
       component: DataReport
     },
     { 

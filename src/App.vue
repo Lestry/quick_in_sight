@@ -1,15 +1,15 @@
 <template>
   <div id="app">
     <transition :name="transitionName">
-      <keep-alive>
-        <router-view class="main-view slide-view" v-if="loaded"/>
-      </keep-alive>
+      <router-view class="main-view slide-view" v-if="loaded"/>
     </transition>
   </div>
 </template>
 
 
 <script>
+  import wx from 'weixin-js-sdk';
+
   import {getSignature} from './apis';
 
   export default {
@@ -18,7 +18,7 @@
     mounted() {
       // test 放开
       // this.loaded = true;
-      
+
       // 获取签名参数
       getSignature(json => {
         console.log('getSignature', json);

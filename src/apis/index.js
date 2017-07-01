@@ -1,25 +1,17 @@
+// require('es6-promise').polyfill();
+// import fetch from 'isomorphic-fetch';
+
 import axios from 'axios';
 
-const A = axios.create({
-  baseURL: 'https://dmp-dbeta.mypaas.com.cn/api/',
-  timeout: 1000,
-  headers: {
-    'content-type': 'application/json'
-  }
-});
 
 // 查询数据报告
-const getChartData = (params, succ, fail) => {
-  A({
-    url: '/quick_insight/text?t=' + new Data().getTime(),
-    method: 'POST',
-    data: {
-      ...params,
-      tenant_code: 'beta',
-    }
-  }).then(res => {
+const getChartData = (lang_text, succ, fail) => {
+
+  axios.get(`https://dmp-dbeta.mypaas.com.cn/api/quick_insight/text?lang_text=${lang_text}&tenant_code=beta&t=${new Date().getTime()}`)
+  .then(res => {
     typeof succ === 'function' && succ(res.data);
-  }).catch(err => {
+  })
+  .catch(err => {
     console.log('Get chart data api failed: ', err);
     typeof fail === 'function' && fail(err);
   })
@@ -27,12 +19,11 @@ const getChartData = (params, succ, fail) => {
 
 // 获取微信JSSDK签名
 const getSignature = (succ, fail) => {
-  A({
-    url: '/quick_insight/signature?t=' + new Data().getTime(),
-    method: 'POST'
-  }).then(res => {
+  axios.post('https://dmp-dbeta.mypaas.com.cn/api/quick_insight/signature?t=' + new Date().getTime())
+  .then(res => {
     typeof succ === 'function' && succ(res.data);
-  }).catch(err => {
+  })
+  .catch(err => {
     console.log('Get wexin signature failed: ', err);
     typeof fail === 'function' && fail(err);
   })

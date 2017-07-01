@@ -40,7 +40,7 @@ const DEFAULT_ECHARTS_OPTIONS = {
     interval: 0,//横轴信息全部显示  
     rotate: 0,//-45度角倾斜显示  
     formatter: function (value) {
-      return value && value.length > 10 ? value.substr(0, 9) + '...' : value;
+      return value && value.length > 14 ? value.substr(0, 13) + '...' : value;
     },
     textStyle: {
       color: '#666'
@@ -53,6 +53,16 @@ const DEFAULT_ECHARTS_OPTIONS = {
   scatter_map_color: ['#C2EFFF','#62CDFF','#fff']
 };
 
+const RESERVE_OPTION_MAPS = {
+  'sum': '求和',
+  'avg': '平均值',
+  'count': '计数',
+  'year': '按年',
+  'month': '按月',
+  'day': '按日'
+}
+
 export {
-  DEFAULT_ECHARTS_OPTIONS
+  DEFAULT_ECHARTS_OPTIONS,
+  RESERVE_OPTION_MAPS
 };
