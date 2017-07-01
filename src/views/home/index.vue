@@ -31,22 +31,18 @@
 
 
 <script>
+  import {getChartData} from '../../apis';
+
+  let recordTimer = 0;
 
   export default {
 
     activated(){
-      // this.$vux.toast.show({
-      //   type: 'warn',
-      //   text: '123123'
-      // });
+      
     },
 
     updated(){
       
-    },
-
-    components: {
-
     },
 
     data(){
@@ -57,7 +53,59 @@
     },
 
     methods: {
-      
+      // 录音开始/结束
+      handleToggleRecord() {
+        if (this.recording) {
+          this.stopRecord();
+        } else {
+          // 调用微信录音接口
+          wx.startRecord({
+            cancel: () => {
+              this.$vux.toast.show({
+                type: 'warn',
+                text: '未授权录音'
+              });
+            }
+          });
+
+          this.recording = true;
+          // 10秒后自动结束录音
+          recordTimer = setTimeout(() => {
+            this.stopRecord();
+          }, 10000);
+        }
+      },
+
+      // 录音结束
+      stopRecord(){
+        // 取消定时操作
+        clearTimeout(recordTimer);
+        // 调用微信sdk结束录音
+        wx.stopRecord({
+          success: res => {
+            const localId = res.localId;
+            wx.translateVoice({
+              localId,
+              isShowProgressTips: 0,
+              complete: res => {
+                if (res.hasOwnProperty('translateResult')) {
+                  console.log('识别结果：' + res.translateResult);
+                  getChartData({
+                    lang_texts: [res.translateResult]
+                  });
+                } else {
+                  this.$vux.toast.show({
+                    type: 'warn',
+                    text: '无法识别'
+                  });
+                }
+              }
+            })
+          }
+        });
+
+        this.recording = false;
+      }
     }
   }
 </script>

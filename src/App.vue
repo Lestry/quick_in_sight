@@ -2,7 +2,7 @@
   <div id="app">
     <transition :name="transitionName">
       <keep-alive>
-        <router-view class="main-view slide-view"/>
+        <router-view class="main-view slide-view" v-if="loaded"/>
       </keep-alive>
     </transition>
   </div>
@@ -10,17 +10,40 @@
 
 
 <script>
-  import {XHeader} from 'vux';
-  
+  import {getSignature} from './apis';
+
   export default {
     name: 'index',
 
-    components: {
-      XHeader,
+    mounted() {
+      // 获取签名参数
+      getSignature(json => {
+
+        console.log('getSignature', json);
+
+        if (json.result) {
+          wx.config({
+            ...json.data,
+            debug: true,
+            jsApiList: [
+              'startRecord',
+              'stopRecord',
+              'translateVoice'
+            ]
+          });
+        }
+      });
+
+      // 完成wx sdk的注入
+      wx.ready(() => {
+        this.loaded = true;
+        console.log('wx-js-sdk is ready!!')
+      });
     },
 
     data () {
       return {
+        loaded: false,
         transitionName: 'slide-left'
       }
     },
