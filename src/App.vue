@@ -34,6 +34,8 @@
         }
       });
 
+      // this.loaded = true;
+
       // 完成wx sdk的注入
       wx.ready(() => {
         this.loaded = true;
