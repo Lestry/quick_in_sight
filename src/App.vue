@@ -48,7 +48,13 @@
       // 完成wx sdk的注入
       wx.ready(() => {
         this.loaded = true;
-        console.log('wx-js-sdk is ready!!')
+        console.log('wx-js-sdk is ready!!');
+        // 主动触发一次录音 弹出授权窗口
+        wx.startRecord({
+          success: function(){
+            wx.stopRecord();
+          }
+        });
       });
     },
 

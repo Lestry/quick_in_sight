@@ -9,30 +9,32 @@ const A = axios.create({
 });
 
 // 查询数据报告
-const getChartData = (params, json) => {
+const getChartData = (params, succ, fail) => {
   A({
-    url: '/quick_insight/text',
+    url: '/quick_insight/text?t=' + new Data().getTime(),
     method: 'POST',
     data: {
       ...params,
-      tenant_code: 'beta'
+      tenant_code: 'beta',
     }
   }).then(res => {
-    typeof json === 'function' && json(res.data);
+    typeof succ === 'function' && succ(res.data);
   }).catch(err => {
     console.log('Get chart data api failed: ', err);
+    typeof fail === 'function' && fail(err);
   })
 }
 
 // 获取微信JSSDK签名
-const getSignature = (json) => {
+const getSignature = (succ, fail) => {
   A({
-    url: '/quick_insight/signature',
+    url: '/quick_insight/signature?t=' + new Data().getTime(),
     method: 'POST'
   }).then(res => {
-    typeof json === 'function' && json(res.data);
+    typeof succ === 'function' && succ(res.data);
   }).catch(err => {
     console.log('Get wexin signature failed: ', err);
+    typeof fail === 'function' && fail(err);
   })
 }
 

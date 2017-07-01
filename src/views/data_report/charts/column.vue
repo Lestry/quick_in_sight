@@ -37,9 +37,13 @@
 
       getChartOpts() {
         const chart_data = {
-          legend: [1,2,3,4],
-          xAxis: [1,2,3,4],
-          series: [1,2,3,4]
+          legend: ['名称（计数）'],
+          xAxis: ['北京', '武汉'],
+          series: [{
+            data: [22, 101],
+            name: '名称（计数）',
+            type: 'bar'
+          }]
         };
 
         return {

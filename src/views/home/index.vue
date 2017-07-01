@@ -17,8 +17,6 @@
         <div class="wave-animate wave-animate-3"></div>
         <div class="wave-animate wave-animate-4"></div>
       </div>
-
-      <div class="recording-progress-bar"></div>
     </div>
 
     <div class="recording-status">
@@ -102,20 +100,31 @@
         wx.stopRecord({
           success: res => {
             const localId = res.localId;
+
+            this.pending = true;
+
             wx.translateVoice({
               localId,
               isShowProgressTips: 0,
               complete: res => {
                 if (res.hasOwnProperty('translateResult')) {
                   console.log('识别结果：' + res.translateResult);
+
                   this.$vux.toast.show({
                     type: 'success',
                     text: '识别结果：' + res.translateResult
                   });
+
                   getChartData({
                     lang_texts: [res.translateResult]
+                  }, json => {
+                    this.pending = false;
+                  }, err => {
+                    this.pending = false;
                   });
+                  
                 } else {
+                  this.pending = false;
                   this.$vux.toast.show({
                     type: 'warn',
                     text: '无法识别'
@@ -250,16 +259,6 @@
     }
     100% {
       transform: rotateZ(360deg);
-    }
-  }
-
-  @keyframes progress
-  {
-    0% {
-
-    }
-    100% {
-
     }
   }
 </style>
