@@ -36,12 +36,12 @@
   export default {
 
     mounted() {
-      this.$router.push({
-        name: 'dataReport',
-        params: {
-          voice: '语音输入的文字'
-        }
-      });
+      // this.$router.push({
+      //   name: 'dataReport',
+      //   params: {
+      //     voice: '语音输入的文字'
+      //   }
+      // });
     },
 
     data(){

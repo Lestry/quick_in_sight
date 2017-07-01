@@ -137,6 +137,10 @@
         this.pending = true;
 
         getChartData(text, json => {
+          // 调试
+          this.$vux.toast.show({
+            text: Object.getOwnPropertyNames(json).join(' ')
+          });
           this.pending = false;
           if (json.result) {
             this.setupData(json.data);
@@ -147,7 +151,8 @@
       },
 
       // 录音开始/结束
-      handleStartRecord() {
+      handleStartRecord(e) {
+        e.stopPropagation();
         if (this.recording) {
           return;
         }
@@ -169,7 +174,8 @@
       },
 
       // 录音结束
-      handleStopRecord(){
+      handleStopRecord(e){
+        e.stopPropagation();
         if (!this.recording) {
           return;
         }
@@ -227,6 +233,7 @@
     }
 
     .bottom-area {
+      user-select: none;
       position: absolute;
       left: 0;
       bottom: 0;
