@@ -16,15 +16,26 @@
     name: 'index',
 
     mounted() {
+      // test 放开
+      // this.loaded = true;
+      
       // 获取签名参数
       getSignature(json => {
-
         console.log('getSignature', json);
-
+        // 返回数据格式
+        // {
+        //   "timestamp": 1498916939,
+        //   "nonceStr": "JM9ya8Tujs647XL1",
+        //   "appId": "wx7bc82d063226059e",
+        //   "signature": "3743dafb6aaa8492c0ce5756cd00f9aa97fe0e23"
+        // }
         if (json.result) {
           wx.config({
-            ...json.data,
-            debug: true,
+            timestamp: json.data.timestamp,
+            nonceStr: json.data.nonceStr,
+            appId: json.data.appId,
+            signature: json.data.signature,
+            debug: false,
             jsApiList: [
               'startRecord',
               'stopRecord',
@@ -33,8 +44,6 @@
           });
         }
       });
-
-      // this.loaded = true;
 
       // 完成wx sdk的注入
       wx.ready(() => {

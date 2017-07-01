@@ -9,12 +9,8 @@
 
   export default {
 
-    activated(){
-      
-    },
+    mounted() {
 
-    updated(){
-      
     },
 
     components: {

@@ -5,6 +5,8 @@ import FastClick from 'fastclick';
 import router from './router';
 import App from './App';
 
+// import './static/libs/jweixin-1.2.0.js';
+
 import  { ToastPlugin } from 'vux';
 
 Vue.use(ToastPlugin);

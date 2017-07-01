@@ -1,7 +1,7 @@
 <template>
   <div class="container">
 
-    <div class="btn-container">
+    <div class="btn-container" @touchend="handleToggleRecord">
 
       <div class="mic-icon">
         <i class="dmpicon-mic"></i>
@@ -22,8 +22,8 @@
     </div>
 
     <div class="recording-status">
-      <div class="primary">点击说出指令</div>
-      <div class="secondary">点击说出指令</div>
+      <div class="primary">{{primaryTip}}</div>
+      <div class="secondary">{{secondaryTip}}</div>
     </div>
 
   </div>
@@ -37,18 +37,36 @@
 
   export default {
 
-    activated(){
-      
-    },
+    mounted() {
 
-    updated(){
-      
     },
 
     data(){
       return {
         recording: false,
         pending: false
+      }
+    },
+
+    computed: {
+      primaryTip() {
+        if (this.pending && !this.recording) {
+          return '正在识别并查询...';
+        } else if (this.recording) {
+          return '正在接收语音...';
+        } else {
+          return '点击说出指令';
+        }
+      },
+
+      secondaryTip() {
+        if (this.pending && !this.recording) {
+          return '';
+        } else if (this.recording) {
+          return '点击停止说话';
+        } else {
+          return '通过语音查询数据报告';
+        }
       }
     },
 
@@ -90,6 +108,10 @@
               complete: res => {
                 if (res.hasOwnProperty('translateResult')) {
                   console.log('识别结果：' + res.translateResult);
+                  this.$vux.toast.show({
+                    type: 'success',
+                    text: '识别结果：' + res.translateResult
+                  });
                   getChartData({
                     lang_texts: [res.translateResult]
                   });
@@ -190,7 +212,9 @@
       z-index: 9;
       width: 100%;
       text-align: center;
+      color: #666;
       .secondary {
+        color: #999;
         font-size: 0.75rem;
         padding-top: 0.5rem;
       }

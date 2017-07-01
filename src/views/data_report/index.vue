@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="chart-area">
-      
+      <ColumnChart/>
     </div>
 
     <div class="bottom-area">
@@ -14,24 +14,23 @@
 
 
 <script>
-  import Pie from './charts/pie';
-  import Column from './charts/column';
-  import Line from './charts/line';
-  import Radar from './charts/radar';
+  import PieChart from './charts/pie';
+  import ColumnChart from './charts/column';
+  import LineChart from './charts/line';
+  import RadarChart from './charts/radar';
   import echarts from 'echarts';
 
   export default {
 
-    activated(){
+    mounted() {
 
-    },
-
-    updated(){
-      
     },
 
     components: {
-
+      PieChart,
+      ColumnChart,
+      LineChart,
+      RadarChart
     },
 
     data(){
