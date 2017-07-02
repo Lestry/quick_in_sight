@@ -319,7 +319,7 @@
         width: 100%;
         line-height: 1.2rem;
         position: absolute;
-        top: 40%;
+        top: 45%;
         left: 0;
         transform: translateY(-50%);
         text-align: center;
@@ -332,19 +332,18 @@
           font-weight: normal;
         }
         .hints {
-          padding: 20px 20px 0;
+          padding: 20px 10px 0;
           color: #999;
           font-size: 0.8rem;
           text-align: left;
           color: rgba(143, 159, 165, 0.95);
           > div {
             // text-align: center;
-            padding: 0 0 10px 5px;
           }
           b {
-            white-space: nowrap;
-            padding: 5px;
             font-weight: normal;
+            display: block;
+            width: 100%;
           }
         }
       }

@@ -159,7 +159,7 @@
       text-align: center;
       position: absolute;
       left: 50%;
-      top: 40%;
+      top: 37%;
       transform: translate(-50%, -50%);
       z-index: 9;
 
@@ -226,7 +226,7 @@
 
     .recording-status {
       position: absolute;
-      bottom: 8%;
+      bottom: 4%;
       z-index: 9;
       width: 100%;
       text-align: center;
@@ -237,19 +237,18 @@
         padding-top: 0.5rem;
       }
       .hints {
-        padding: 20px 20px 0;
+        padding: 20px 10px 0;
         color: #999;
         font-size: 0.8rem;
         text-align: left;
         color: rgba(143, 159, 165, 0.95);
         > div {
           // text-align: center;
-          padding: 0 0 10px 5px;
         }
         b {
-          white-space: nowrap;
-          padding: 5px;
           font-weight: normal;
+          display: block;
+          width: 100%;
         }
       }
     }
