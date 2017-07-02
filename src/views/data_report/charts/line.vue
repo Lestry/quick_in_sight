@@ -94,8 +94,8 @@
           series: chart_data.series,
           dataZoom: [{
             type: 'inside',
-            start: 0,
-            end: 10
+            startValue: 0,
+            endValue: 10
           }],
         }
       },

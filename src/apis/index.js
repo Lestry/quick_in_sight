@@ -5,9 +5,16 @@ import axios from 'axios';
 
 
 // 查询数据报告
-const getChartData = (lang_text, succ, fail) => {
+const getChartData = (lang_text, prevData, succ, fail) => {
+  prevData = prevData || {};
 
-  axios.get(`https://dmp-dbeta.mypaas.com.cn/api/quick_insight/text?lang_text=${lang_text}&tenant_code=beta&t=${new Date().getTime()}`)
+  axios.get(`https://dmp-dbeta.mypaas.com.cn/api/quick_insight/text?t=${new Date().getTime()}`, {
+    params: {
+      ...prevData,
+      lang_text: lang_text, 
+      tenant_code: 'beta'
+    }
+  })
   .then(res => {
     typeof succ === 'function' && succ(res.data);
   })

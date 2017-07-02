@@ -16,7 +16,7 @@ Vue.config.productionTip = false;
 /* eslint-disable no-new */
 new Vue({
   router,
-  data: {
+  /*data: {
     chart_data: {
       "data": [
         [{
@@ -656,6 +656,6 @@ new Vue({
         "parent_id": "39e09d05-610-0daf-54ad-9da4c631467a"
       }
     }
-  },
+  },*/
   render: h => h(App)
 }).$mount('#app-box');

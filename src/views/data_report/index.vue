@@ -3,27 +3,39 @@
     <div class="chart-title">{{title}}</div>
 
     <div class="chart-area">
-      <ColumnChart v-if="currChartType === 'cluster_column'" 
+      <ColumnChart v-if="currChartType === 'cluster_column' && fmtedData" 
       :key="uuid" 
       :chartData="fmtedData" 
       :chartWidth="chartWidth"/>
-      <PieChart v-if="currChartType === 'pie'" 
+      <PieChart v-if="currChartType === 'pie' && fmtedData" 
       :key="uuid" 
       :chartData="fmtedData" 
       :chartWidth="chartWidth"/>
-      <LineChart v-if="currChartType === 'line'" 
+      <LineChart v-if="currChartType === 'line' && fmtedData" 
       :key="uuid" 
       :chartData="fmtedData" 
       :chartWidth="chartWidth"/>
+
+
+      <div class="empty-text" v-if="!fmtedData && !recording && !pending">
+        暂无数据
+        <div class="secondary-text">
+          请重新说出您的要求
+        </div>
+      </div>
     </div>
+
 
     <loading v-model="pending" :text="loadingText"></loading>
 
     <loading v-model="recording" text="语音输入中..."></loading>
 
     <div class="bottom-area" @touchstart="handleStartRecord" @touchend="handleStopRecord" @touchcancel="handleStopRecord">
-      <div class="voice-btn">
+      <div :class="'voice-btn  ' + btnCls">
         <i class="dmpicon-mic"></i>
+        <div class="effect-box">
+          <b v-for="n in 40"></b>
+        </div>
       </div>
     </div>
   </div>
@@ -48,7 +60,7 @@
   export default {
 
     mounted() {
-      this.getChart(this.$route.params.voice);
+      this.getChart(this.$route.params.voice, null);
 
       // this.setupData(this.$root.chart_data);
     },
@@ -66,6 +78,7 @@
         recording: false,                                   // 录音状态
         pending: false,                                     // 图表加载状态
         loadingText: '努力加载中...',                        
+        defaultData: null,                                  // 原始数据
         fmtedData: null,                                    // 格式化后的图标数据
         chartWidth: '100%',
         currChartType: 'cluster_column',                    // 当前图表类型
@@ -75,6 +88,12 @@
           nums: []
         },
         data: []
+      }
+    },
+
+    computed: {
+      btnCls() {
+        return this.recording ? 'recording' : '';
       }
     },
 
@@ -133,29 +152,39 @@
       },
 
       // 请求数据(用文字)
-      getChart(text) {
+      getChart(text, data) {
         this.pending = true;
 
-        getChartData(text, json => {
-          // 调试
-          this.$vux.toast.show({
-            text: Object.getOwnPropertyNames(json).join(' ')
-          });
+        getChartData(text, data, json => {
           this.pending = false;
           if (json.result) {
             this.setupData(json.data);
-          } 
+            this.defaultData = json.data;
+
+            console.log('-----------------', json.data);
+          } else {
+            this.defaultData = null;
+            this.$vux.toast.show({
+              type: 'warn',
+              text: json.msg
+            });
+          }
         }, err => {
           this.pending = false;
+          this.defaultData = null;
         });
       },
 
       // 录音开始/结束
       handleStartRecord(e) {
         e.stopPropagation();
+
         if (this.recording) {
           return;
         }
+
+        this.recording = true;
+
         // 调用微信录音接口
         wx.startRecord({
           cancel: () => {
@@ -165,8 +194,6 @@
             });
           }
         });
-
-        this.recording = true;
         // 10秒后自动结束录音
         recordTimer = setTimeout(() => {
           this.handleStopRecord();
@@ -196,6 +223,7 @@
                 if (res.hasOwnProperty('translateResult')) {
                   console.log('识别结果：' + res.translateResult);
                   this.loadingText = '努力加载中...';
+
                   this.getChart(res.translateResult);
                 } else {
                   this.pending = false;
@@ -218,11 +246,15 @@
 <style lang="less" scoped>
   .container{
     .chart-title {
-      line-height: 2.5rem;
+      line-height: 1.1rem;
       height: 2.5rem;
       width: 100%;
       color: #333;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1rem;
+      box-sizing: border-box;
     }
     .chart-area {
       position: absolute;
@@ -230,10 +262,28 @@
       top: 2.5rem;
       right: 0;
       bottom: 2.5rem;
+      .empty-text {
+        width: 100%;
+        line-height: 1.2rem;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        text-align: center;
+        font-size: 1.5rem;
+        color: #999;
+        .secondary-text {
+          padding-top: 0.5rem;
+          color: #999;
+          font-size: 1rem;
+          font-weight: normal;
+        }
+      }
     }
 
     .bottom-area {
       user-select: none;
+      -webkit-user-select: none;
       position: absolute;
       left: 0;
       bottom: 0;
@@ -249,12 +299,56 @@
         justify-content: center;
         align-items: center;
         border-radius: 4px;
-        border: 1px solid #eee;
+        background: rgba(72,141,251, 1);
         .dmpicon-mic {
           font-size: 1.25rem;
-          color: #999;
+          color: #fff;
+        }
+        .effect-box {
+          display: none;
+        }
+        &.recording {
+          .effect-box {
+            display: flex;
+            position: absolute;
+            left: 0.25rem;
+            right: 0.25rem;
+            top: 0;
+            bottom: 0;
+            justify-content: space-around;
+            align-items: center;
+            b {
+              width: 0.25rem;
+              height: 1rem;
+              display: block;
+              background-color: rgba(255, 255, 255, .3);
+              animation-name: height-change;
+              animation-duration: .4s;
+              animation-iteration-count: infinite;
+              animation-timing-function: linear;
+              &:nth-child(3n) {
+                animation-delay: 0.25s;
+              }
+              &:nth-child(3n+1) {
+                animation-delay: 0.6s;
+              }
+            }
+          }
         }
       }
+    }
+  }
+
+  @keyframes height-change 
+  {
+    0% {
+      height: 0;
+    }
+    50% {
+      height: 1rem;
+    }
+    100% {
+      height: 0;
     }
   }
 </style>

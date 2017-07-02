@@ -113,13 +113,6 @@
               isShowProgressTips: 0,
               complete: res => {
                 if (res.hasOwnProperty('translateResult')) {
-                  console.log('识别结果：' + res.translateResult);
-
-                  this.$vux.toast.show({
-                    type: 'success',
-                    text: '识别结果：' + res.translateResult
-                  });
-
                   this.pending = false;
 
                   this.$router.push({
