@@ -17,7 +17,7 @@
 
     mounted() {
       // test 放开
-      // this.loaded = true;
+      this.loaded = true;
 
       // 获取签名参数
       getSignature(json => {
@@ -49,28 +49,6 @@
       wx.ready(() => {
         this.loaded = true;
         console.log('wx-js-sdk is ready!!');
-
-        if (!localStorage.getItem('has-record-auth')) {
-          // 主动触发一次录音 弹出授权窗口
-          wx.startRecord({
-            cancel: () => {
-              wx.stopRecord();
-            }
-          });
-          setTimeout(() => {
-            wx.stopRecord({
-              success: () => {
-                localStorage.setItem('has-record-auth', 1);
-              }
-            });
-          }, 10)
-          wx.stopRecord({
-            success: () => {
-              localStorage.setItem('has-record-auth', 1);
-            }
-          });
-        }
-        
       });
     },
 
