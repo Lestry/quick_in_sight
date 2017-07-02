@@ -18,9 +18,18 @@
 
 
       <div class="empty-text" v-if="!fmtedData && !recording && !pending">
-        暂无数据
+        您的问题不在我们的数据范围内
         <div class="secondary-text">
-          请点击开始说出您的要求
+          请重新提问
+        </div>
+        <div class="hints">
+          <div>tips: 请尝试询问以下问题:</div>
+          <b>统计2017年新增会员总数</b>
+          <b>查看金融街上海2017年6月新增粉丝数</b>
+          <b>2017年6月开发商新增粉丝数排名，降序排序</b>
+          <b>查看鲁能集团2017年每个月的新增会员数</b>
+          <b>查看2017年广州万科万科会的新增业主总数</b>
+          <b>查看2017年每一个月的广州万科取消粉丝数，用折线图展示</b>
         </div>
       </div>
 
@@ -37,9 +46,9 @@
           再次点击停止输入
         </div>
       </div>
-    </div>
 
-    <loading v-model="pending" :text="loadingText"></loading>
+      <loading v-model="pending" :text="loadingText"></loading>
+    </div>
 
     <div class="bottom-area" @touchend="handleToggleRecord">
       <div :class="'voice-btn  ' + btnCls">
@@ -80,7 +89,7 @@
       Loading,
       PieChart,
       ColumnChart,
-      LineChart
+      LineChart,
     },
 
     data(){
@@ -89,6 +98,7 @@
         recording: false,                                   // 录音状态
         pending: false,                                     // 图表加载状态
         loadingText: '努力加载中...',                        
+        showp: false,
         defaultData: null,                                  // 原始数据
         fmtedData: null,                                    // 格式化后的图标数据
         chartWidth: '100%',
@@ -189,7 +199,7 @@
       // 录音开始/结束
       handleToggleRecord(e) {
         e.stopPropagation();
-
+        
         if (this.recording) {
           this.stopRecord();
         } else {
@@ -235,7 +245,7 @@
                   this.pending = false;
                   this.$vux.toast.show({
                     type: 'warn',
-                    text: '无法识别'
+                    text: '无法识别 请说慢一点'
                   });
                 }
               }
@@ -250,7 +260,16 @@
 </script>
 
 <style lang="less" scoped>
+  @import '~vux/src/styles/close.less';
   .container{
+    .position-vertical-demo {
+      background-color: #ffe26d;
+      color: #000;
+      text-align: center;
+      padding: 15px;
+      position: relative;
+      z-index: 9999;
+    }
     .chart-title {
       line-height: 1.1rem;
       height: 2.5rem;
@@ -300,17 +319,33 @@
         width: 100%;
         line-height: 1.2rem;
         position: absolute;
-        top: 50%;
+        top: 40%;
         left: 0;
         transform: translateY(-50%);
         text-align: center;
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         color: #999;
         .secondary-text {
           padding-top: 0.5rem;
           color: #999;
           font-size: 1rem;
           font-weight: normal;
+        }
+        .hints {
+          padding: 20px 20px 0;
+          color: #999;
+          font-size: 0.8rem;
+          text-align: left;
+          color: rgba(143, 159, 165, 0.95);
+          > div {
+            // text-align: center;
+            padding: 0 0 10px 5px;
+          }
+          b {
+            white-space: nowrap;
+            padding: 5px;
+            font-weight: normal;
+          }
         }
       }
     }

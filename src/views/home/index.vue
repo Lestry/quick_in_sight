@@ -22,6 +22,15 @@
     <div class="recording-status">
       <div class="primary">{{primaryTip}}</div>
       <div class="secondary">{{secondaryTip}}</div>
+      <div class="hints">
+        <div>tips: 请尝试询问以下问题:</div>
+        <b>统计2017年新增会员总数</b>
+        <b>查看金融街上海2017年6月新增粉丝数</b>
+        <b>2017年6月开发商新增粉丝数排名，降序排序</b>
+        <b>查看鲁能集团2017年每个月的新增会员数</b>
+        <b>查看2017年广州万科万科会的新增业主总数</b>
+        <b>查看2017年每一个月的广州万科取消粉丝数，用折线图展示</b>
+      </div>
     </div>
 
   </div>
@@ -126,7 +135,7 @@
                   this.pending = false;
                   this.$vux.toast.show({
                     type: 'warn',
-                    text: '无法识别'
+                    text: '无法识别 请说慢一点'
                   });
                 }
               }
@@ -217,7 +226,7 @@
 
     .recording-status {
       position: absolute;
-      bottom: 20%;
+      bottom: 8%;
       z-index: 9;
       width: 100%;
       text-align: center;
@@ -226,6 +235,22 @@
         color: #999;
         font-size: 0.75rem;
         padding-top: 0.5rem;
+      }
+      .hints {
+        padding: 20px 20px 0;
+        color: #999;
+        font-size: 0.8rem;
+        text-align: left;
+        color: rgba(143, 159, 165, 0.95);
+        > div {
+          // text-align: center;
+          padding: 0 0 10px 5px;
+        }
+        b {
+          white-space: nowrap;
+          padding: 5px;
+          font-weight: normal;
+        }
       }
     }
   }
