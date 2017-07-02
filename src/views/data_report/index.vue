@@ -20,19 +20,30 @@
       <div class="empty-text" v-if="!fmtedData && !recording && !pending">
         暂无数据
         <div class="secondary-text">
-          请重新说出您的要求
+          请点击开始说出您的要求
+        </div>
+      </div>
+
+      <div v-if="recording">
+        <div class="wave-animate wave-animate-1"></div>
+        <div class="wave-animate wave-animate-2"></div>
+        <div class="wave-animate wave-animate-3"></div>
+        <div class="wave-animate wave-animate-4"></div>
+      </div>
+
+      <div class="empty-text" v-if="recording">
+        语音输入中...
+        <div class="secondary-text">
+          再次点击停止输入
         </div>
       </div>
     </div>
 
-
     <loading v-model="pending" :text="loadingText"></loading>
 
-    <loading v-model="recording" text="语音输入中..."></loading>
-
-    <div class="bottom-area" @touchstart="handleStartRecord" @touchend="handleStopRecord" @touchcancel="handleStopRecord">
+    <div class="bottom-area" @touchend="handleToggleRecord">
       <div :class="'voice-btn  ' + btnCls">
-        <i class="dmpicon-mic"></i>
+        <i class="dmpicon-mic" v-if="!recording"></i>
         <div class="effect-box">
           <b v-for="n in 40"></b>
         </div>
@@ -176,36 +187,31 @@
       },
 
       // 录音开始/结束
-      handleStartRecord(e) {
+      handleToggleRecord(e) {
         e.stopPropagation();
 
         if (this.recording) {
-          return;
+          this.stopRecord();
+        } else {
+          this.recording = true;
+          // 调用微信录音接口
+          wx.startRecord({
+            cancel: () => {
+              this.$vux.toast.show({
+                type: 'warn',
+                text: '未授权录音'
+              });
+            }
+          });
+          // 10秒后自动结束录音
+          recordTimer = setTimeout(() => {
+            this.stopRecord();
+          }, 10000);
         }
-
-        this.recording = true;
-
-        // 调用微信录音接口
-        wx.startRecord({
-          cancel: () => {
-            this.$vux.toast.show({
-              type: 'warn',
-              text: '未授权录音'
-            });
-          }
-        });
-        // 10秒后自动结束录音
-        recordTimer = setTimeout(() => {
-          this.handleStopRecord();
-        }, 10000);
       },
 
       // 录音结束
-      handleStopRecord(e){
-        e.stopPropagation();
-        if (!this.recording) {
-          return;
-        }
+      stopRecord(){
         // 取消定时操作
         clearTimeout(recordTimer);
         // 调用微信sdk结束录音
@@ -262,6 +268,34 @@
       top: 2.5rem;
       right: 0;
       bottom: 2.5rem;
+      .wave-animate {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        box-sizing: border-box;
+        width: 0rem;
+        height: 0rem;
+        border-radius: 50%;
+        z-index: 0;
+        border: 1px solid rgba(72,141,251, 0.8);
+        animation-name: waterwave;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-in-out;
+        &.wave-animate-1 {
+          animation-delay: 0s;
+        }
+        &.wave-animate-2 {
+          animation-delay: 0.5s;
+        }
+        &.wave-animate-3 {
+          animation-delay: 1s;
+        }
+        &.wave-animate-4 {
+          animation-delay: 1.5s;
+        }
+      }
       .empty-text {
         width: 100%;
         line-height: 1.2rem;
@@ -278,6 +312,22 @@
           font-size: 1rem;
           font-weight: normal;
         }
+      }
+    }
+
+    @keyframes waterwave
+    {
+      0% {
+        width: 0rem;
+        height: 0rem;
+        border-color: rgba(72,141,251, 0.8);
+        border-width: 1px;
+      }
+      100% {
+        width: 30rem;
+        height: 30rem;
+        border-color: rgba(72,141,251, 0);
+        border-width: 1px;
       }
     }
 

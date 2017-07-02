@@ -17,7 +17,7 @@
 
     mounted() {
       // test 放开
-      this.loaded = true;
+      // this.loaded = true;
 
       // 获取签名参数
       getSignature(json => {
