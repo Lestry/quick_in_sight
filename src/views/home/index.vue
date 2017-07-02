@@ -142,6 +142,7 @@
 
 <style lang="less" scoped>
   .container{
+    overflow: hidden;
     .btn-container {
       width: 10rem;
       height: 10rem;

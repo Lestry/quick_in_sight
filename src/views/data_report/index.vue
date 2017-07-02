@@ -25,10 +25,10 @@
       </div>
 
       <div v-if="recording">
-        <div class="wave-animate wave-animate-1"></div>
-        <div class="wave-animate wave-animate-2"></div>
-        <div class="wave-animate wave-animate-3"></div>
-        <div class="wave-animate wave-animate-4"></div>
+        <div class="wave-animate-frames wave-animate-frames-1"></div>
+        <div class="wave-animate-frames wave-animate-frames-2"></div>
+        <div class="wave-animate-frames wave-animate-frames-3"></div>
+        <div class="wave-animate-frames wave-animate-frames-4"></div>
       </div>
 
       <div class="empty-text" v-if="recording">
@@ -268,7 +268,7 @@
       top: 2.5rem;
       right: 0;
       bottom: 2.5rem;
-      .wave-animate {
+      .wave-animate-frames {
         position: absolute;
         left: 50%;
         top: 50%;
@@ -279,20 +279,20 @@
         border-radius: 50%;
         z-index: 0;
         border: 1px solid rgba(72,141,251, 0.8);
-        animation-name: waterwave;
+        animation-name: waterwaves;
         animation-duration: 2s;
         animation-iteration-count: infinite;
         animation-timing-function: ease-in-out;
-        &.wave-animate-1 {
+        &.wave-animate-frames-1 {
           animation-delay: 0s;
         }
-        &.wave-animate-2 {
+        &.wave-animate-frames-2 {
           animation-delay: 0.5s;
         }
-        &.wave-animate-3 {
+        &.wave-animate-frames-3 {
           animation-delay: 1s;
         }
-        &.wave-animate-4 {
+        &.wave-animate-frames-4 {
           animation-delay: 1.5s;
         }
       }
@@ -315,7 +315,7 @@
       }
     }
 
-    @keyframes waterwave
+    @keyframes waterwaves
     {
       0% {
         width: 0rem;
